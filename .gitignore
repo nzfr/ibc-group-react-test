@@ -1,0 +1,6 @@
+# Root ignores
+.idea/
+# Server
+server/node_modules/
+# Prevent server env from being committed (also in server/.gitignore)
+server/.env
