@@ -12,7 +12,6 @@ import { logout } from "../../redux/action/user";
 import {
   PiAlarm,
   PiBell,
-  PiGear,
   PiKeyLight,
   PiList,
   PiListChecks,
@@ -109,11 +108,9 @@ const Navbar = ({ setShowSidebar, showSidebar, open, setOpen }) => {
 
   /////////////////////////////////////////// USE EFFECTS ////////////////////////////////////////////
   useEffect(() => {
-    var timer = setInterval(() => setDate(new Date()), 1000);
-    return function cleanup() {
-      clearInterval(timer);
-    };
-  });
+    const timer = setInterval(() => setDate(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
   useEffect(() => {
     dispatch(getNotifications());
     dispatch(getTasks());
@@ -145,7 +142,7 @@ const Navbar = ({ setShowSidebar, showSidebar, open, setOpen }) => {
             </IconButton>
             <div>
               <p className="text-sky-400 text-xl gap-1 flex items-center">
-                <PiTimerLight className="text-[25px]" /> {date.toLocaleTimeString()}
+                <PiTimerLight className="text-[25px]" /> {date.toLocaleTimeString([], { timeZoneName: 'long' })}
               </p>
             </div>
           </div>

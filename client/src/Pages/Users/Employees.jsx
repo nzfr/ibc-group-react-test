@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import Topbar from "./Topbar";
 import { Table } from "../../Components";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +19,26 @@ const Employees = memo(() => {
   /////////////////////////////////////// VARIABLES ////////////////////////////////////////
   const dispatch = useDispatch();
   const { employees, allEmployees, isFetching, error } = useSelector((state) => state.user);
-  const columns = [
+  // STATES (moved up for stable callbacks)
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [openFilters, setOpenFilters] = useState("");
+  const [openView, setOpenViewk] = useState(false);
+  const [isFiltered, setIsFiltered] = useState(false);
+
+  // Stable handlers
+  const handleOpenEditModal = useCallback((employee) => {
+    dispatch(getUserReducer(employee));
+    setOpenEditModal(true);
+  }, [dispatch]);
+
+  const handleOpenDeleteModal = useCallback((taskId) => {
+    setSelectedUserId(taskId);
+    setOpenDeleteModal(true);
+  }, []);
+
+  const columns = useMemo(() => [
     {
       field: "uid",
       headerName: "ID",
@@ -94,15 +113,7 @@ const Employees = memo(() => {
         </div>
       ),
     },
-  ];
-
-  /////////////////////////////////////// STATES ////////////////////////////////////////
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState("");
-  const [openFilters, setOpenFilters] = useState("");
-  const [openView, setOpenViewk] = useState(false);
-  const [isFiltered, setIsFiltered] = useState(false);
+  ], [handleOpenEditModal, handleOpenDeleteModal]);
 
   /////////////////////////////////////// USE EFFECTS ////////////////////////////////////
   useEffect(() => {
@@ -120,14 +131,6 @@ const Employees = memo(() => {
   const hanldeOpenViewModal = (taskId) => {
     setSelectedUserId(taskId);
     setOpenViewk(true);
-  };
-  const handleOpenEditModal = (employee) => {
-    dispatch(getUserReducer(employee));
-    setOpenEditModal(true);
-  };
-  const handleOpenDeleteModal = (taskId) => {
-    setSelectedUserId(taskId);
-    setOpenDeleteModal(true);
   };
 
   return (
