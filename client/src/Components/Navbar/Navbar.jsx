@@ -108,11 +108,9 @@ const Navbar = ({ setShowSidebar, showSidebar, open, setOpen }) => {
 
   /////////////////////////////////////////// USE EFFECTS ////////////////////////////////////////////
   useEffect(() => {
-    var timer = setInterval(() => setDate(new Date()), 1000);
-    return function cleanup() {
-      clearInterval(timer);
-    };
-  });
+    const timer = setInterval(() => setDate(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
   useEffect(() => {
     dispatch(getNotifications());
     dispatch(getTasks());
